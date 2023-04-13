@@ -1,4 +1,5 @@
 import pygame
+from os import walk
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, position, group):
@@ -15,8 +16,15 @@ class Player(pygame.sprite.Sprite):
     
     def import_assets(self):
         path = "Player/Sidewalk/Walking Side_Animation 1_"
-        self.animation = [pygame.image.load(f"{path}{frame}.png").convert_alpha() for frame in range(10)]
-        
+        self.animation = []
+        # self.animation = [pygame.image.load(f"{path}{frame}.png").convert_alpha() for frame in range(10)]
+        for frame in range(10):
+            image = pygame.image.load(f"{path}{frame}.png").convert_alpha()
+            image_size = pygame.math.Vector2(image.get_size()) * 3
+            scaled_image = pygame.transform.scale(image, (image_size))
+            flipped_image = pygame.transform.flip(scaled_image, True, False)
+            self.animation.append(flipped_image)
+            
     def move(self, delta_time):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
