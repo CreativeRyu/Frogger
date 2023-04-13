@@ -23,6 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.position += self.direction * self.speed * delta_time
         self.rect.center = round(self.position.x), round(self.position.y)
     
+    # Basic Animation without any Controls
     def animate(self, delta_time):
         self.frame_index += 10 * delta_time
         if self.frame_index >= len(self.animation):
