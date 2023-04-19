@@ -2,7 +2,7 @@ import pygame, sys
 import game_settings as gs
 from player import Player
 
-# Basic Setup # # # # # # # # # # # # #
+# Basic Setup # # # # # # # # # # # # # 
 pygame.init()
 display = pygame.display.set_mode((gs.WINDOW_WIDTH, gs.WINDOW_HEIGHT))
 pygame.display.set_caption("Frogger")
@@ -14,7 +14,7 @@ player_group = pygame.sprite.Group()
 # Object Declaration
 player = Player((gs.WINDOW_WIDTH // 2, gs.WINDOW_HEIGHT // 2), player_group)
 
-# Game Loop # # # # # # # # # # # # # #
+# Game Loop # # # # # # # # # # # # # # # #
 while True:
     # Event Loop # # # # # # # # # # # # # #
     for event in pygame.event.get():

@@ -16,17 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2()
         self.speed = 200
     
-    def import_assets(self):
-        # path = "Player/Walk/Side/side_"
-        # self.animation = []
-        # # self.animation = [pygame.image.load(f"{path}{frame}.png").convert_alpha() for frame in range(10)]
-        # for frame in range(10):
-        #     image = pygame.image.load(f"{path}{frame}.png").convert_alpha()
-        #     image_size = pygame.math.Vector2(image.get_size()) * 3
-        #     scaled_image = pygame.transform.scale(image, (image_size))
-        #     flipped_image = pygame.transform.flip(scaled_image, True, False)
-        #     self.animation.append(flipped_image)
-        
+    def import_assets(self): 
         self.animations = {}
         for index, folder in enumerate(walk("Player/Walk/")):
             if index == 0:
@@ -40,13 +30,16 @@ class Player(pygame.sprite.Sprite):
                     scaled_image = pygame.transform.scale(image, (image_size))
                     key = folder[0].split("/")[2]
                     self.animations[key].append(scaled_image)
-        print(self.animations)
     
     # Basic Animation without any Controls
+    # geht durch die Bilder unter dem status und iteriert sie durch
     def animate(self, delta_time):
         current_animation = self.animations[self.status]
-        self.frame_index += 10 * delta_time
-        if self.frame_index >= len(current_animation):
+        if self.direction.magnitude() != 0: # Somit muss eine Bewegung vorhanden sein
+            self.frame_index += 15 * delta_time
+            if self.frame_index >= len(current_animation):
+                self.frame_index = 0
+        else:
             self.frame_index = 0
         self.image = current_animation[int(self.frame_index)]
     
@@ -62,9 +55,9 @@ class Player(pygame.sprite.Sprite):
         
         if keys[pygame.K_RIGHT]:
             self.direction.x = 1
-            self.status = "side"
+            self.status = "right"
         elif keys[pygame.K_LEFT]:
-            self.status = "side"
+            self.status = "left"
             self.direction.x = -1
         else: 
             self.direction.x = 0
