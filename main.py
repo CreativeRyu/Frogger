@@ -1,6 +1,7 @@
 import pygame, sys
 import game_settings as gs
 from player import Player
+from car import Car
 
 # Basic Setup # # # # # # # # # # # # # 
 pygame.init()
@@ -10,9 +11,11 @@ clock = pygame.time.Clock()
 
 # Sprite Groups # # # # # # # # # # # #
 player_group = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()
 
 # Object Declaration
 player = Player((gs.WINDOW_WIDTH // 2, gs.WINDOW_HEIGHT // 2), player_group)
+car = Car((100,200), all_sprites)
 
 # Game Loop # # # # # # # # # # # # # # # #
 while True:
@@ -28,8 +31,10 @@ while True:
     display.fill("blue")
     
     player_group.update(delta_time)
+    all_sprites.update(delta_time)
     
     # Draw Graphix
+    all_sprites.draw(display)
     player_group.draw(display)
     
     pygame.display.update()
