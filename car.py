@@ -31,7 +31,7 @@ class Car(pygame.sprite.Sprite):
     #     return scaled_image
     
     def random_animation_import(self, car):
-        path = f"Car/Car_images/{car}/{car}_"
+        path = f"graphix/Car/Car_images/{car}/{car}_"
         self.animation = []
         
         for frame in range(4):

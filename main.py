@@ -7,15 +7,18 @@ class AllSprites(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
         self.offset = pygame.math.Vector2()
+        self.background = pygame.image.load("graphix/level/map.png").convert()
+        self.foreground = pygame.image.load("graphix/level/overlay.png").convert_alpha()
 
-        
     def custom_draw(self):
         
-        # blit background first
+        display.blit(self.background, (0,0))
         
         for sprite in self.sprites():
             offset_position = sprite.rect.topleft + self.offset
-            display.blit(sprite, offset_position)
+            display.blit(sprite.image, offset_position)
+        
+        display.blit(self.foreground, (0,0))
 
 # Basic Setup # # # # # # # # # # # # # 
 pygame.init()
@@ -24,7 +27,7 @@ pygame.display.set_caption("Frogger")
 clock = pygame.time.Clock()
 
 # Sprite Groups # # # # # # # # # # # #
-all_sprites = pygame.sprite.Group()
+all_sprites = AllSprites()
 
 # Object Declaration
 player = Player((gs.WINDOW_WIDTH // 2, gs.WINDOW_HEIGHT // 2), all_sprites)
@@ -41,11 +44,12 @@ while True:
     delta_time = clock.tick() / 1000
     
     # Draw Background
-    display.fill("blue")
+    # display.fill("blue")
 
     all_sprites.update(delta_time)
     
     # Draw Graphix
-    all_sprites.draw(display)
+    # all_sprites.draw(display)
+    all_sprites.custom_draw()
     
     pygame.display.update()

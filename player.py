@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
     
     def import_assets(self): 
         self.animations = {}
-        for index, folder in enumerate(walk("Player/Walk/")):
+        for index, folder in enumerate(walk("graphix/Player/Walk/")):
             if index == 0:
                 for name in folder[1]:
                     self.animations[name] = []
@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
                     image = pygame.image.load(path).convert_alpha()
                     image_size = pygame.math.Vector2(image.get_size()) * 3
                     scaled_image = pygame.transform.scale(image, (image_size))
-                    key = folder[0].split("/")[2]
+                    key = folder[0].split("/")[3]
                     self.animations[key].append(scaled_image)
     
     # Basic Animation without any Controls
