@@ -2,7 +2,7 @@ import pygame, sys
 import game_settings as gs
 from player import Player
 from car import Car
-from random import choice
+from random import choice, randint
 
 class AllSprites(pygame.sprite.Group):
     def __init__(self):
@@ -42,7 +42,7 @@ player = Player((gs.WINDOW_WIDTH // 2, gs.WINDOW_HEIGHT // 2), all_sprites)
 
 # Timer
 car_timer = pygame.event.custom_type()
-pygame.time.set_timer(car_timer, 150)
+pygame.time.set_timer(car_timer, 100)
 car_position_list = []
 
 # Game Loop # # # # # # # # # # # # # # # #
@@ -57,7 +57,8 @@ while True:
             random_position = choice(gs.CAR_START_POSITIONS)
             if random_position not in car_position_list:
                 car_position_list.append(random_position)
-                car = Car(random_position, all_sprites)
+                current_position = (random_position[0], random_position[1] + randint(-8, 8))
+                car = Car(current_position, all_sprites)
             if len(car_position_list) > 5:
                 del car_position_list[0]
         

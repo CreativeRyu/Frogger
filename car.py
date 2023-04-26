@@ -1,6 +1,6 @@
 import pygame
 from os import walk
-from random import choice, randint
+from random import randint
 
 class Car(pygame.sprite.Sprite):
     def __init__(self, position, group):
