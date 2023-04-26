@@ -51,7 +51,8 @@ class Player(pygame.sprite.Sprite):
         elif keys[pygame.K_DOWN]:
             self.direction.y = 1
             self.status = "down"
-        else: self.direction.y = 0
+        else: 
+            self.direction.y = 0
         
         if keys[pygame.K_RIGHT]:
             self.direction.x = 1
