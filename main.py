@@ -2,6 +2,7 @@ import pygame, sys
 import game_settings as gs
 from player import Player
 from car import Car
+from random import choice
 
 class AllSprites(pygame.sprite.Group):
     def __init__(self):
@@ -11,14 +12,21 @@ class AllSprites(pygame.sprite.Group):
         self.foreground = pygame.image.load("graphix/level/overlay.png").convert_alpha()
 
     def custom_draw(self):
+        # Camera Movement
+        # change the offsetvector for camera movement
+        self.offset.x = player.rect.centerx - gs.WINDOW_WIDTH / 2
+        self.offset.y = player.rect.centery - gs.WINDOW_HEIGHT / 2
         
-        display.blit(self.background, (0,0))
+        # draw background
+        display.blit(self.background, -self.offset)
         
-        for sprite in self.sprites():
-            offset_position = sprite.rect.topleft + self.offset
+        # draw player sprites and objects
+        for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
+            offset_position = sprite.rect.topleft - self.offset
             display.blit(sprite.image, offset_position)
         
-        display.blit(self.foreground, (0,0))
+        # draw foreground
+        display.blit(self.foreground, -self.offset)
 
 # Basic Setup # # # # # # # # # # # # # 
 pygame.init()
@@ -31,7 +39,11 @@ all_sprites = AllSprites()
 
 # Object Declaration
 player = Player((gs.WINDOW_WIDTH // 2, gs.WINDOW_HEIGHT // 2), all_sprites)
-car = Car((100,200), all_sprites)
+
+# Timer
+car_timer = pygame.event.custom_type()
+pygame.time.set_timer(car_timer, 150)
+car_position_list = []
 
 # Game Loop # # # # # # # # # # # # # # # #
 while True:
@@ -40,6 +52,14 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+            
+        if event.type == car_timer:
+            random_position = choice(gs.CAR_START_POSITIONS)
+            if random_position not in car_position_list:
+                car_position_list.append(random_position)
+                car = Car(random_position, all_sprites)
+            if len(car_position_list) > 5:
+                del car_position_list[0]
         
     delta_time = clock.tick() / 1000
     
