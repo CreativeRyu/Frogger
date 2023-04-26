@@ -1,5 +1,4 @@
 import pygame
-from os import walk
 from random import randint
 
 class Car(pygame.sprite.Sprite):
@@ -20,15 +19,6 @@ class Car(pygame.sprite.Sprite):
         else:
             self.direction = pygame.math.Vector2(-1,0)
         self.speed = 300
-    
-    # def random_image_import(self):
-    #     path = "Car/Car_images/"
-    #     for _, _, image_list in walk(path):
-    #         file_name = choice(image_list)
-    #     image = pygame.image.load(path + file_name).convert_alpha()
-    #     image_size = pygame.math.Vector2(image.get_size()) * 1.5
-    #     scaled_image = pygame.transform.scale(image, (image_size))
-    #     return scaled_image
     
     def random_animation_import(self, car):
         path = f"graphix/Car/Car_images/{car}/{car}_"
