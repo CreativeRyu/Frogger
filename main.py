@@ -46,6 +46,11 @@ pygame.init()
 display = pygame.display.set_mode((gs.WINDOW_WIDTH, gs.WINDOW_HEIGHT))
 pygame.display.set_caption("Frogger")
 clock = pygame.time.Clock()
+victory_font = pygame.font.Font(None, 80)
+victorytext_surface = victory_font.render("Level Done", True, "White")
+victorytext_rect = victorytext_surface.get_rect(midtop = (gs.WINDOW_WIDTH / 2, gs.WINDOW_HEIGHT / 4))
+bg_music = pygame.mixer.Sound(gs.BG_MUSIC)
+bg_music.play(loops = -1)
 
 # Sprite Groups # # # # # # # # # # # #
 all_sprites = AllSprites()
@@ -81,14 +86,17 @@ while True:
                 del car_position_list[0]
         
     delta_time = clock.tick() / 1000
-    
-    # Draw Background
-    # display.fill("blue")
 
-    all_sprites.update(delta_time)
+    # Victory Condition
+    if player.position.y > 1180:
+        
+        all_sprites.update(delta_time)
     
-    # Draw Graphix
-    # all_sprites.draw(display)
-    all_sprites.custom_draw()
+        # Draw Graphix
+        all_sprites.custom_draw()
+    else:
+        display.blit(victorytext_surface, victorytext_rect)
+        pygame.draw.rect(display, (255,255,255),
+                        victorytext_rect.inflate(30, 30), width = 8, border_radius= 5)
     
     pygame.display.update()

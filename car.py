@@ -22,7 +22,7 @@ class Car(pygame.sprite.Sprite):
         self.speed = 300
         
         # Collision
-        self.hitbox = self.rect.inflate(-self.rect.width * 0.3, -self.rect.height / 2)
+        self.hitbox = self.rect.inflate(-self.rect.width * 0.3, -self.rect.height * 0.8)
     
     def random_animation_import(self, car):
         path = f"graphix/Car/Car_images/{car}/{car}_"
