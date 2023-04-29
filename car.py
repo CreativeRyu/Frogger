@@ -4,6 +4,7 @@ from random import randint
 class Car(pygame.sprite.Sprite):
     def __init__(self, position, group):
         super().__init__(group)
+        self.name = "car"
         self.coordinates = position
         self.frame_index = 0
         self.random_car = f"Car{randint(1,2)}"
@@ -19,6 +20,9 @@ class Car(pygame.sprite.Sprite):
         else:
             self.direction = pygame.math.Vector2(-1,0)
         self.speed = 300
+        
+        # Collision
+        self.hitbox = self.rect.inflate(-self.rect.width * 0.3, -self.rect.height / 2)
     
     def random_animation_import(self, car):
         path = f"graphix/Car/Car_images/{car}/{car}_"
@@ -38,7 +42,8 @@ class Car(pygame.sprite.Sprite):
 
     def move(self, delta_time):
         self.position += self.direction * self.speed * delta_time
-        self.rect.center = round(self.position.x), round(self.position.y)
+        self.hitbox.center = round(self.position.x), round(self.position.y)
+        self.rect.center = self.hitbox.center
     
     def update(self, delta_time):
         self.move(delta_time)

@@ -1,5 +1,6 @@
 import pygame
 from os import walk
+import sys
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, position, group, collision_sprites):
@@ -18,25 +19,34 @@ class Player(pygame.sprite.Sprite):
         
         # Collisions
         self.collision_sprites = collision_sprites
+        self.hitbox = self.rect.inflate(-self.rect.width * 0.4, -self.rect.height / 2)
+    
+    def car_collision(self, sprite):
+        if hasattr(sprite, "name") and sprite.name == "car":
+            pygame.quit()
+            sys.exit()
     
     def collision(self, axis):
         if axis == "horizontal":
             for sprite in self.collision_sprites.sprites():
-                if sprite.rect.colliderect(self.rect):
+                if sprite.hitbox.colliderect(self.hitbox):
+                    self.car_collision(sprite)
                     if self.direction.x > 0: # player moving right
-                        self.rect.right = sprite.rect.left
+                        self.hitbox.right = sprite.hitbox.left
                     if self.direction.x < 0: # player moving left
-                        self.rect.left = sprite.rect.right
-                    self.position.x = self.rect.centerx
+                        self.hitbox.left = sprite.hitbox.right
+                    self.rect.centerx = self.hitbox.centerx
+                    self.position.x = self.hitbox.centerx
         else:
             for sprite in self.collision_sprites.sprites():
-                if sprite.rect.colliderect(self.rect):
+                if sprite.hitbox.colliderect(self.hitbox):
+                    self.car_collision(sprite)
                     if self.direction.y > 0: # player moving down
-                        self.rect.bottom = sprite.rect.top
+                        self.hitbox.bottom = sprite.hitbox.top
                     if self.direction.y < 0: # player moving up
-                        self.rect.top = sprite.rect.bottom 
-                    self.position.y = self.rect.centery
-            
+                        self.hitbox.top = sprite.hitbox.bottom
+                    self.rect.centery = self.hitbox.centery
+                    self.position.y = self.hitbox.centery
     
     def import_assets(self): 
         self.animations = {}
@@ -85,21 +95,45 @@ class Player(pygame.sprite.Sprite):
         else: 
             self.direction.x = 0
     
+    # Die unsichtbare Wand definieren
+    # Der Bereich in dem sich der Player bewegen darf
+    def restrict_player(self):
+        if self.rect.left < 620:
+            self.position.x = 620 + self.rect.width / 2
+            self.rect.left = 620
+
+        if self.rect.right > 2584:
+            self.position.x = 2584 - self.rect.width / 2
+            self.rect.right = 2584
+
+        if self.rect.bottom > 3500:
+            self.position.y = 3500 - self.rect.height / 2
+            self.rect.bottom = 3500
+        
+        if self.rect.bottom > 3500:
+            self.position.y = 3500 - self.rect.height / 2
+            self.rect.bottom = 3500
+            
+        self.hitbox.center = self.rect.center
+        
     def move(self, delta_time):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
         
         # horizontal movement + collision
         self.position.x += self.direction.x * self.speed * delta_time
-        self.rect.centerx = round(self.position.x)
+        self.hitbox.centerx = round(self.position.x) # for collision
+        self.rect.centerx = self.hitbox.centerx # for drawing
         self.collision("horizontal")
         
         # vertical movement + collision
         self.position.y += self.direction.y * self.speed * delta_time
-        self.rect.centery = round(self.position.y)
+        self.hitbox.centery = round(self.position.y)
+        self.rect.centery = self.hitbox.centery
         self.collision("vertical")
     
     def update(self, delta_time):
         self.handle_inputs()
         self.move(delta_time)
         self.animate(delta_time)
+        self.restrict_player()

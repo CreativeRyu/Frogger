@@ -4,7 +4,7 @@ import game_settings as gs
 from player import Player
 from car import Car
 from random import choice, randint
-from levelobjects import SpriteObject
+from levelobjects import SimpleObject, LongObject
 
 class AllSprites(pygame.sprite.Group):
     def __init__(self):
@@ -31,11 +31,15 @@ class AllSprites(pygame.sprite.Group):
         display.blit(self.foreground, -self.offset)
 
 # Erstellung der Levelobjekte auf der Karte zu Beginn es Spiels
-def init_level_objects(sprite_dictionary, path):
+def init_level_objects(sprite_dictionary, path, sprite_type):
     for file_name, position_list in sprite_dictionary.items():
         surface = pygame.image.load(f"{path}{file_name}.png").convert_alpha()
-        for position in position_list:
-            SpriteObject(surface, position, [all_sprites, object_sprites])
+        if sprite_type == "simple":
+            for position in position_list:
+                SimpleObject(surface, position, [all_sprites, object_sprites])
+        else:
+            for position in position_list:
+                LongObject(surface, position, [all_sprites, object_sprites])
 
 # Basic Setup # # # # # # # # # # # # # 
 pygame.init()
@@ -51,8 +55,8 @@ object_sprites = pygame.sprite.Group()
 player = Player((2062, 3274), all_sprites, object_sprites)
 
 # Object Sprite Init Level Creation
-init_level_objects(gs.SIMPLE_OBJECTS, gs.SIMPLE_OBJECTS_PATH)
-init_level_objects(gs.LONG_OBJECTS, gs.LONG_OBJECTS_PATH)
+init_level_objects(gs.SIMPLE_OBJECTS, gs.SIMPLE_OBJECTS_PATH, "simple")
+init_level_objects(gs.LONG_OBJECTS, gs.LONG_OBJECTS_PATH, "long")
 
 # Timer
 car_timer = pygame.event.custom_type()
