@@ -2,7 +2,7 @@ import pygame
 from os import walk
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, position, group):
+    def __init__(self, position, group, collision_sprites):
         super().__init__(group)
         self.import_assets()
         self.frame_index = 0
@@ -15,6 +15,28 @@ class Player(pygame.sprite.Sprite):
         self.position = pygame.math.Vector2(self.rect.center)
         self.direction = pygame.math.Vector2()
         self.speed = 200
+        
+        # Collisions
+        self.collision_sprites = collision_sprites
+    
+    def collision(self, axis):
+        if axis == "horizontal":
+            for sprite in self.collision_sprites.sprites():
+                if sprite.rect.colliderect(self.rect):
+                    if self.direction.x > 0: # player moving right
+                        self.rect.right = sprite.rect.left
+                    if self.direction.x < 0: # player moving left
+                        self.rect.left = sprite.rect.right
+                    self.position.x = self.rect.centerx
+        else:
+            for sprite in self.collision_sprites.sprites():
+                if sprite.rect.colliderect(self.rect):
+                    if self.direction.y > 0: # player moving down
+                        self.rect.bottom = sprite.rect.top
+                    if self.direction.y < 0: # player moving up
+                        self.rect.top = sprite.rect.bottom 
+                    self.position.y = self.rect.centery
+            
     
     def import_assets(self): 
         self.animations = {}
@@ -66,8 +88,16 @@ class Player(pygame.sprite.Sprite):
     def move(self, delta_time):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
-        self.position += self.direction * self.speed * delta_time
-        self.rect.center = round(self.position.x), round(self.position.y)
+        
+        # horizontal movement + collision
+        self.position.x += self.direction.x * self.speed * delta_time
+        self.rect.centerx = round(self.position.x)
+        self.collision("horizontal")
+        
+        # vertical movement + collision
+        self.position.y += self.direction.y * self.speed * delta_time
+        self.rect.centery = round(self.position.y)
+        self.collision("vertical")
     
     def update(self, delta_time):
         self.handle_inputs()

@@ -35,7 +35,7 @@ def init_level_objects(sprite_dictionary, path):
     for file_name, position_list in sprite_dictionary.items():
         surface = pygame.image.load(f"{path}{file_name}.png").convert_alpha()
         for position in position_list:
-            SpriteObject(surface, position, all_sprites)
+            SpriteObject(surface, position, [all_sprites, object_sprites])
 
 # Basic Setup # # # # # # # # # # # # # 
 pygame.init()
@@ -45,9 +45,10 @@ clock = pygame.time.Clock()
 
 # Sprite Groups # # # # # # # # # # # #
 all_sprites = AllSprites()
+object_sprites = pygame.sprite.Group()
 
 # Object Declaration
-player = Player((2062, 3274), all_sprites)
+player = Player((2062, 3274), all_sprites, object_sprites)
 
 # Object Sprite Init Level Creation
 init_level_objects(gs.SIMPLE_OBJECTS, gs.SIMPLE_OBJECTS_PATH)
@@ -71,7 +72,7 @@ while True:
             if random_position not in car_position_list:
                 car_position_list.append(random_position)
                 current_position = (random_position[0], random_position[1] + randint(-8, 8))
-                car = Car(current_position, all_sprites)
+                car = Car(current_position, [all_sprites, object_sprites])
             if len(car_position_list) > 5:
                 del car_position_list[0]
         
